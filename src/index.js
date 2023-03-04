@@ -49,19 +49,23 @@ const posts = [
 const comments = [
   {
     id: '101',
-    text: 'This graphql material is very useful'
+    text: 'This graphql material is very useful',
+    author: '1'
   },
   {
     id: '102',
-    text: 'I like the challenges andrew provides'
+    text: 'I like the challenges andrew provides',
+    author: '1'
   },
   {
     id: '103',
-    text: 'Challenges feel natural and are great way to learn'
+    text: 'Challenges feel natural and are great way to learn',
+    author: '2'
   },
   {
     id: '104',
-    text: 'Will try sarahs music someday'
+    text: 'Will try sarahs music someday',
+    author: '3'
   }
 ]
 
@@ -96,6 +100,7 @@ const typeDefs = `
   type Comment {
     id: ID!
     text: String!
+    author: User!
   }
 `;
 
@@ -151,6 +156,11 @@ const resolvers = {
       return posts.filter((post) => {
         return post.author === parent.id
       })
+    }
+  },
+  Comment: {
+    author(parent, args, ctx, info) {
+      return users.find((user) => user.id === parent.author)
     }
   }
 };
