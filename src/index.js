@@ -22,6 +22,30 @@ const users = [
   },
 ]
 
+const posts = [
+  {
+    id: '10',
+    title: 'GraphQL 101',
+    body: 'learning graphql with Andrew',
+    published: true,
+    author: '1'
+  },
+  {
+    id: '20',
+    title: 'Modern React',
+    body: 'learning react with net ninja',
+    published: true,
+    author: '1'
+  },
+  {
+    id: '30',
+    title: 'Ruby on Rails',
+    body: 'learning ruby on rails with mashrur',
+    published: false,
+    author: '3'
+  },
+]
+
 // Scalar Types - String, Boolean, Int, Float, ID
 
 // Type Definations (schema)
@@ -30,6 +54,7 @@ const typeDefs = `
     me: User!
     post: Post!
     users(query: String): [User!]!
+    posts(query: String): [Post!]!
   }
 
   type User {
@@ -44,6 +69,7 @@ const typeDefs = `
     title: String!
     body: String!
     published: Boolean!
+    author: User!
   }
 `;
 
@@ -73,8 +99,24 @@ const resolvers = {
       return users.filter((user) => {
         return user.name.toLowerCase().includes(args.query.toLowerCase())
       })
+    },
+    posts(parent, args, ctx, info) {
+      if(!args.query) {
+        return posts
+      }
+      return posts.filter((post) => {
+        return (
+          post.title.toLowerCase().includes(args.query.toLowerCase()) ||
+          post.body.toLowerCase().includes(args.query.toLowerCase())
+        )
+      })
     }
   },
+  Post: {
+    author(parent, args, ctx, info) {
+      return users.find((user) => user.id === parent.author)
+    }
+  }
 };
 
 const server = new GraphQLServer({
