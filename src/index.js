@@ -46,6 +46,25 @@ const posts = [
   },
 ]
 
+const comments = [
+  {
+    id: '101',
+    text: 'This graphql material is very useful'
+  },
+  {
+    id: '102',
+    text: 'I like the challenges andrew provides'
+  },
+  {
+    id: '103',
+    text: 'Challenges feel natural and are great way to learn'
+  },
+  {
+    id: '104',
+    text: 'Will try sarahs music someday'
+  }
+]
+
 // Scalar Types - String, Boolean, Int, Float, ID
 
 // Type Definations (schema)
@@ -55,6 +74,7 @@ const typeDefs = `
     post: Post!
     users(query: String): [User!]!
     posts(query: String): [Post!]!
+    comments: [Comment!]!
   }
 
   type User {
@@ -71,6 +91,11 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
   }
 `;
 
@@ -111,6 +136,9 @@ const resolvers = {
           post.body.toLowerCase().includes(args.query.toLowerCase())
         )
       })
+    },
+    comments(parent, args, ctx, info) {
+      return comments
     }
   },
   Post: {
