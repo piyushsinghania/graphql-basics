@@ -1,0 +1,48 @@
+
+CREATE POST
+-------------
+mutation {
+  createPost(data: {
+    title: "Graphql 101",
+    body: "Graphql basics",
+    published: true,
+    author: "1"
+  }) {
+    id
+    title
+    body
+  }
+}
+
+DELETE POST
+------------
+mutation {
+  deletePost(id: "3143faef-d906-4901-8aff-8efd2267ebf6") {
+    id
+    title
+    body
+    published
+  }
+}
+
+UPDATE POST
+------------
+mutation {
+  updatePost(
+    id: "9af1c735-c9b7-498d-bc0f-57c2927d0efb",
+    data: {
+      title: "Graphql 102",
+      body: "Learning graphql advance topics",
+      published: true
+    }
+  ) {
+    id
+    title
+    body
+    published
+    author {
+      id
+      name
+    }
+  }
+}
