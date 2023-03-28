@@ -46,3 +46,36 @@ mutation {
     }
   }
 }
+
+CREATE COMMENT
+---------------
+mutation {
+  createComment(data: {
+    text: "Hey there",
+    post: "e2d030c9-2408-4e99-aed1-8d57a5356bdf",
+    author: "1"
+  }) {
+    id
+    text
+    author {
+      id
+      name
+    }
+  }
+}
+
+DELETE COMMENT
+----------------
+mutation {
+  deleteComment(id: "f25e00d2-87f6-42ef-a56e-4359efa2093c") {
+    id
+    text
+    author {
+      id
+      name
+    }
+  }
+}
+
+UPDATE COMMENT
+--------------
