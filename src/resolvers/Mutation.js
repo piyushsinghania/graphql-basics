@@ -68,7 +68,7 @@ const Mutation = {
 
     return user;
   },
-  createPost(parent, args, { db }, info) {
+  createPost(parent, args, { db, pubsub }, info) {
     const userExists = db.users.some((user) => user.id === args.data.author);
 
     if (!userExists) {
@@ -81,6 +81,14 @@ const Mutation = {
     };
 
     db.posts.push(post);
+    if (post.published) {
+      pubsub.publish('post', {
+        post: {
+          mutation: 'CREATED',
+          data: post,
+        },
+      });
+    }
     return post;
   },
   deletePost(parent, args, { db }, info) {
@@ -102,19 +110,19 @@ const Mutation = {
     const { id, data } = args;
     const post = db.posts.find((post) => post.id === id);
 
-    if(!post) {
+    if (!post) {
       throw new Error('Post not found');
     }
 
-    if(typeof data.title === 'string') {
+    if (typeof data.title === 'string') {
       post.title = data.title;
     }
 
-    if(typeof data.body === 'string') {
+    if (typeof data.body === 'string') {
       post.body = data.body;
     }
 
-    if(typeof data.published === 'boolean') {
+    if (typeof data.published === 'boolean') {
       post.published = data.published;
     }
 
@@ -143,7 +151,7 @@ const Mutation = {
     };
 
     db.comments.push(comment);
-    pubsub.publish(`comment ${args.data.post}`, { comment })
+    pubsub.publish(`comment ${args.data.post}`, { comment });
 
     return comment;
   },
@@ -163,16 +171,16 @@ const Mutation = {
     const { id, data } = args;
     const comment = db.comments.find((comment) => comment.id === id);
 
-    if(!comment) {
+    if (!comment) {
       throw new Error('Comment not found');
     }
 
-    if(typeof data.text === 'string') {
+    if (typeof data.text === 'string') {
       comment.text = data.text;
     }
 
     return comment;
-  }
+  },
 };
 
 export default Mutation;
